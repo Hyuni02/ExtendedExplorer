@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPEC §9: Win10 탐색기 리본. uicc로 컴파일 (build.bat). 이미지는 코드에서 공급한다 (UpdateProperty). -->
+<Application xmlns="http://schemas.microsoft.com/windows/2009/Ribbon">
+  <Application.Commands>
+    <!-- 탭 -->
+    <Command Name="cmdTabHome"  Id="1001" LabelTitle="홈"   Keytip="H"/>
+    <Command Name="cmdTabShare" Id="1002" LabelTitle="공유" Keytip="S"/>
+    <Command Name="cmdTabView"  Id="1003" LabelTitle="보기" Keytip="V"/>
+    <Command Name="cmdTabGroupDrive"   Id="1004" LabelTitle="드라이브 도구"/>
+    <Command Name="cmdTabDrive"        Id="1005" LabelTitle="관리" Keytip="JD"/>
+    <Command Name="cmdTabGroupPicture" Id="1006" LabelTitle="사진 도구"/>
+    <Command Name="cmdTabPicture"      Id="1007" LabelTitle="관리" Keytip="JP"/>
+    <Command Name="cmdFileMenu" Id="1010" LabelTitle="파일" Keytip="F"/>
+    <Command Name="cmdQat"      Id="1011"/>
+
+    <!-- 그룹 -->
+    <Command Name="cmdGrpClipboard" Id="1020" LabelTitle="클립보드"/>
+    <Command Name="cmdGrpOrganize"  Id="1021" LabelTitle="구성"/>
+    <Command Name="cmdGrpNew"       Id="1022" LabelTitle="새로 만들기"/>
+    <Command Name="cmdGrpOpen"      Id="1023" LabelTitle="열기"/>
+    <Command Name="cmdGrpSelect"    Id="1024" LabelTitle="선택"/>
+    <Command Name="cmdGrpTab"       Id="1025" LabelTitle="탭"/>
+    <Command Name="cmdGrpSend"      Id="1026" LabelTitle="보내기"/>
+    <Command Name="cmdGrpSecurity"  Id="1027" LabelTitle="보안"/>
+    <Command Name="cmdGrpPanes"     Id="1028" LabelTitle="창"/>
+    <Command Name="cmdGrpLayout"    Id="1029" LabelTitle="레이아웃"/>
+    <Command Name="cmdGrpCurView"   Id="1030" LabelTitle="현재 보기"/>
+    <Command Name="cmdGrpShowHide"  Id="1031" LabelTitle="표시/숨기기"/>
+    <Command Name="cmdGrpOptions"   Id="1032" LabelTitle="옵션"/>
+    <Command Name="cmdGrpSplit"     Id="1033" LabelTitle="분할"/>
+    <Command Name="cmdGrpDriveManage" Id="1034" LabelTitle="관리"/>
+    <Command Name="cmdGrpDriveMedia"  Id="1035" LabelTitle="미디어"/>
+    <Command Name="cmdGrpRotate"      Id="1036" LabelTitle="회전"/>
+    <Command Name="cmdGrpPicView"     Id="1037" LabelTitle="보기"/>
+
+    <!-- 홈 -->
+    <Command Name="cmdPin"           Id="2001" LabelTitle="즐겨찾기에 고정" TooltipDescription="선택한 폴더(없으면 현재 폴더)를 즐겨찾기에 고정합니다."/>
+    <Command Name="cmdCopy"          Id="2002" LabelTitle="복사"/>
+    <Command Name="cmdPaste"         Id="2003" LabelTitle="붙여넣기"/>
+    <Command Name="cmdCut"           Id="2004" LabelTitle="잘라내기"/>
+    <Command Name="cmdCopyPath"      Id="2005" LabelTitle="경로 복사"/>
+    <Command Name="cmdPasteShortcut" Id="2006" LabelTitle="바로 가기 붙여넣기"/>
+    <Command Name="cmdMoveTo"        Id="2007" LabelTitle="이동 위치"/>
+    <Command Name="cmdCopyTo"        Id="2008" LabelTitle="복사 위치"/>
+    <Command Name="cmdDelete"        Id="2009" LabelTitle="삭제"/>
+    <Command Name="cmdRecycle"       Id="2010" LabelTitle="휴지통으로 이동"/>
+    <Command Name="cmdDeletePerm"    Id="2011" LabelTitle="영구히 삭제"/>
+    <Command Name="cmdDeleteMenu"    Id="2023" LabelTitle="삭제"/>
+    <Command Name="cmdRename"        Id="2012" LabelTitle="이름 바꾸기"/>
+    <Command Name="cmdNewFolder"     Id="2013" LabelTitle="새 폴더"/>
+    <Command Name="cmdNewItem"       Id="2014" LabelTitle="새 항목"/>
+    <Command Name="cmdProperties"    Id="2015" LabelTitle="속성"/>
+    <Command Name="cmdSelectAll"     Id="2016" LabelTitle="모두 선택"/>
+    <Command Name="cmdSelectNone"    Id="2017" LabelTitle="선택 안 함"/>
+    <Command Name="cmdInvertSel"     Id="2018" LabelTitle="선택 영역 반전"/>
+    <Command Name="cmdNewTab"        Id="2019" LabelTitle="새 탭"/>
+
+    <!-- 공유 -->
+    <Command Name="cmdShare"    Id="2030" LabelTitle="공유"/>
+    <Command Name="cmdEmail"    Id="2031" LabelTitle="전자 메일"/>
+    <Command Name="cmdZip"      Id="2032" LabelTitle="압축(ZIP)"/>
+    <Command Name="cmdBurn"     Id="2033" LabelTitle="디스크에 굽기"/>
+    <Command Name="cmdPrint"    Id="2034" LabelTitle="인쇄"/>
+    <Command Name="cmdFax"      Id="2035" LabelTitle="팩스"/>
+    <Command Name="cmdSecurity" Id="2036" LabelTitle="고급 보안"/>
+
+    <!-- 보기 -->
+    <Command Name="cmdNavPane"     Id="2040" LabelTitle="탐색 창"/>
+    <Command Name="cmdPreviewPane" Id="2041" LabelTitle="미리 보기 창"/>
+    <Command Name="cmdDetailsPane" Id="2042" LabelTitle="세부 정보 창"/>
+    <Command Name="cmdViewXL"      Id="2050" LabelTitle="아주 큰 아이콘"/>
+    <Command Name="cmdViewL"       Id="2051" LabelTitle="큰 아이콘"/>
+    <Command Name="cmdViewM"       Id="2052" LabelTitle="보통 아이콘"/>
+    <Command Name="cmdViewS"       Id="2053" LabelTitle="작은 아이콘"/>
+    <Command Name="cmdViewList"    Id="2054" LabelTitle="목록"/>
+    <Command Name="cmdViewDetails" Id="2055" LabelTitle="자세히"/>
+    <Command Name="cmdViewTiles"   Id="2056" LabelTitle="바둑판식"/>
+    <Command Name="cmdViewContent" Id="2057" LabelTitle="내용"/>
+    <Command Name="cmdSortBy"      Id="2060" LabelTitle="정렬 기준"/>
+    <Command Name="cmdSortName"    Id="2061" LabelTitle="이름"/>
+    <Command Name="cmdSortDate"    Id="2062" LabelTitle="수정한 날짜"/>
+    <Command Name="cmdSortType"    Id="2063" LabelTitle="유형"/>
+    <Command Name="cmdSortSize"    Id="2064" LabelTitle="크기"/>
+    <Command Name="cmdSortAsc"     Id="2065" LabelTitle="오름차순"/>
+    <Command Name="cmdSortDesc"    Id="2066" LabelTitle="내림차순"/>
+    <Command Name="cmdGroupBy"     Id="2070" LabelTitle="분류 방법"/>
+    <Command Name="cmdGroupName"   Id="2071" LabelTitle="이름"/>
+    <Command Name="cmdGroupDate"   Id="2072" LabelTitle="수정한 날짜"/>
+    <Command Name="cmdGroupType"   Id="2073" LabelTitle="유형"/>
+    <Command Name="cmdGroupSize"   Id="2074" LabelTitle="크기"/>
+    <Command Name="cmdGroupNone"   Id="2075" LabelTitle="(없음)"/>
+    <Command Name="cmdAddColumns"  Id="2080" LabelTitle="열 추가"/>
+    <Command Name="cmdColDate"     Id="2081" LabelTitle="수정한 날짜"/>
+    <Command Name="cmdColType"     Id="2082" LabelTitle="유형"/>
+    <Command Name="cmdColSize"     Id="2083" LabelTitle="크기"/>
+    <Command Name="cmdColCreated"  Id="2084" LabelTitle="만든 날짜"/>
+    <Command Name="cmdColAuthor"   Id="2085" LabelTitle="작성자"/>
+    <Command Name="cmdColTags"     Id="2086" LabelTitle="태그"/>
+    <Command Name="cmdColTitle"    Id="2087" LabelTitle="제목"/>
+    <Command Name="cmdSizeColumns" Id="2090" LabelTitle="모든 열 너비 조정"/>
+    <Command Name="cmdCheckBoxes"  Id="2091" LabelTitle="항목 확인란"/>
+    <Command Name="cmdShowExt"     Id="2092" LabelTitle="파일 확장명"/>
+    <Command Name="cmdShowHidden"  Id="2093" LabelTitle="숨긴 항목"/>
+    <Command Name="cmdHideSelected" Id="2094" LabelTitle="선택한 항목 숨기기"/>
+    <Command Name="cmdOptions"     Id="2095" LabelTitle="옵션"/>
+    <Command Name="cmdRestoreSession" Id="2130" LabelTitle="세션 복원" TooltipDescription="종료할 때 탭·분할·경로를 저장하고 다음 실행 때 복원합니다."/>
+    <Command Name="cmdOpenInTab"      Id="2131" LabelTitle="폴더를 새 탭으로" TooltipDescription="폴더를 열면 실행 중인 창의 새 탭으로 엽니다. 끄면 새 창으로 엽니다."/>
+    <Command Name="cmdSplitV"      Id="2096" LabelTitle="좌우 분할" TooltipDescription="Ctrl+R"/>
+    <Command Name="cmdSplitH"      Id="2097" LabelTitle="상하 분할" TooltipDescription="Ctrl+Shift+R"/>
+    <Command Name="cmdClosePane"   Id="2098" LabelTitle="Pane 닫기" TooltipDescription="Ctrl+W"/>
+
+    <!-- 파일 메뉴 -->
+    <Command Name="cmdNewWindow" Id="2100" LabelTitle="새 창 열기"/>
+    <Command Name="cmdOpenPS"    Id="2101" LabelTitle="Windows PowerShell 열기"/>
+    <Command Name="cmdOpenCmd"   Id="2102" LabelTitle="명령 프롬프트 열기"/>
+    <Command Name="cmdClose"     Id="2103" LabelTitle="닫기"/>
+
+    <!-- 드라이브 도구 -->
+    <Command Name="cmdOptimize" Id="2110" LabelTitle="최적화"/>
+    <Command Name="cmdCleanup"  Id="2111" LabelTitle="정리"/>
+    <Command Name="cmdFormat"   Id="2112" LabelTitle="포맷"/>
+    <Command Name="cmdEject"    Id="2113" LabelTitle="꺼내기"/>
+
+    <!-- 사진 도구 -->
+    <Command Name="cmdRotateLeft"    Id="2120" LabelTitle="왼쪽으로 회전"/>
+    <Command Name="cmdRotateRight"   Id="2121" LabelTitle="오른쪽으로 회전"/>
+    <Command Name="cmdSetBackground" Id="2122" LabelTitle="배경으로 설정"/>
+  </Application.Commands>
+
+  <Application.Views>
+    <Ribbon>
+      <Ribbon.ApplicationMenu>
+        <ApplicationMenu CommandName="cmdFileMenu">
+          <MenuGroup Class="MajorItems">
+            <Button CommandName="cmdNewWindow"/>
+            <Button CommandName="cmdNewTab"/>
+            <Button CommandName="cmdOpenPS"/>
+            <Button CommandName="cmdOpenCmd"/>
+          </MenuGroup>
+          <MenuGroup Class="MajorItems">
+            <Button CommandName="cmdOptions"/>
+          </MenuGroup>
+          <MenuGroup>
+            <Button CommandName="cmdClose"/>
+          </MenuGroup>
+        </ApplicationMenu>
+      </Ribbon.ApplicationMenu>
+
+      <Ribbon.QuickAccessToolbar>
+        <QuickAccessToolbar CommandName="cmdQat">
+          <QuickAccessToolbar.ApplicationDefaults>
+            <Button CommandName="cmdProperties"/>
+            <Button CommandName="cmdNewFolder"/>
+          </QuickAccessToolbar.ApplicationDefaults>
+        </QuickAccessToolbar>
+      </Ribbon.QuickAccessToolbar>
+
+      <Ribbon.Tabs>
+        <Tab CommandName="cmdTabHome">
+          <Group CommandName="cmdGrpClipboard">
+            <SizeDefinition>
+              <ControlNameMap>
+                <ControlNameDefinition Name="pin"/>
+                <ControlNameDefinition Name="copy"/>
+                <ControlNameDefinition Name="paste"/>
+                <ControlNameDefinition Name="cut"/>
+                <ControlNameDefinition Name="path"/>
+                <ControlNameDefinition Name="link"/>
+              </ControlNameMap>
+              <GroupSizeDefinition Size="Large">
+                <ControlSizeDefinition ControlName="pin" IsImageVisible="true"   ImageSize="Large" IsLabelVisible="true"/>
+                <ControlSizeDefinition ControlName="copy" IsImageVisible="true"  ImageSize="Large" IsLabelVisible="true"/>
+                <ControlSizeDefinition ControlName="paste" IsImageVisible="true" ImageSize="Large" IsLabelVisible="true"/>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="cut" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="path" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="link" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Medium">
+                <ControlSizeDefinition ControlName="pin" IsImageVisible="true"   ImageSize="Large" IsLabelVisible="true"/>
+                <ControlSizeDefinition ControlName="copy" IsImageVisible="true"  ImageSize="Large" IsLabelVisible="true"/>
+                <ControlSizeDefinition ControlName="paste" IsImageVisible="true" ImageSize="Large" IsLabelVisible="true"/>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="cut" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="path" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="link" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Small">
+                <ControlSizeDefinition ControlName="pin" IsImageVisible="true"   ImageSize="Large" IsLabelVisible="true"/>
+                <ControlSizeDefinition ControlName="copy" IsImageVisible="true"  ImageSize="Large" IsLabelVisible="true"/>
+                <ControlSizeDefinition ControlName="paste" IsImageVisible="true" ImageSize="Large" IsLabelVisible="true"/>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="cut" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="path" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="link" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+            </SizeDefinition>
+            <Button CommandName="cmdPin"/>
+            <Button CommandName="cmdCopy"/>
+            <Button CommandName="cmdPaste"/>
+            <Button CommandName="cmdCut"/>
+            <Button CommandName="cmdCopyPath"/>
+            <Button CommandName="cmdPasteShortcut"/>
+          </Group>
+          <Group CommandName="cmdGrpOrganize" SizeDefinition="FourButtons">
+            <Button CommandName="cmdMoveTo"/>
+            <Button CommandName="cmdCopyTo"/>
+            <SplitButton CommandName="cmdDeleteMenu">
+              <SplitButton.ButtonItem>
+                <Button CommandName="cmdDelete"/>
+              </SplitButton.ButtonItem>
+              <SplitButton.MenuGroups>
+                <MenuGroup>
+                  <Button CommandName="cmdRecycle"/>
+                  <Button CommandName="cmdDeletePerm"/>
+                </MenuGroup>
+              </SplitButton.MenuGroups>
+            </SplitButton>
+            <Button CommandName="cmdRename"/>
+          </Group>
+          <Group CommandName="cmdGrpNew" SizeDefinition="TwoButtons">
+            <Button CommandName="cmdNewFolder"/>
+            <Button CommandName="cmdNewItem"/>
+          </Group>
+          <Group CommandName="cmdGrpOpen" SizeDefinition="OneButton">
+            <Button CommandName="cmdProperties"/>
+          </Group>
+          <Group CommandName="cmdGrpSelect">
+            <SizeDefinition>
+              <ControlNameMap>
+                <ControlNameDefinition Name="all"/>
+                <ControlNameDefinition Name="none"/>
+                <ControlNameDefinition Name="inv"/>
+              </ControlNameMap>
+              <GroupSizeDefinition Size="Large">
+                <Row><ControlSizeDefinition ControlName="all" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="none" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="inv" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Medium">
+                <Row><ControlSizeDefinition ControlName="all" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="none" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="inv" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Small">
+                <Row><ControlSizeDefinition ControlName="all" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="none" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="inv" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+            </SizeDefinition>
+            <Button CommandName="cmdSelectAll"/>
+            <Button CommandName="cmdSelectNone"/>
+            <Button CommandName="cmdInvertSel"/>
+          </Group>
+          <Group CommandName="cmdGrpTab" SizeDefinition="OneButton">
+            <Button CommandName="cmdNewTab"/>
+          </Group>
+        </Tab>
+
+        <Tab CommandName="cmdTabShare">
+          <Group CommandName="cmdGrpSend" SizeDefinition="SixButtons">
+            <Button CommandName="cmdShare"/>
+            <Button CommandName="cmdEmail"/>
+            <Button CommandName="cmdZip"/>
+            <Button CommandName="cmdBurn"/>
+            <Button CommandName="cmdPrint"/>
+            <Button CommandName="cmdFax"/>
+          </Group>
+          <Group CommandName="cmdGrpSecurity" SizeDefinition="OneButton">
+            <Button CommandName="cmdSecurity"/>
+          </Group>
+        </Tab>
+
+        <Tab CommandName="cmdTabView">
+          <Group CommandName="cmdGrpPanes" SizeDefinition="ThreeButtons-OneBigAndTwoSmall">
+            <ToggleButton CommandName="cmdNavPane"/>
+            <ToggleButton CommandName="cmdPreviewPane"/>
+            <ToggleButton CommandName="cmdDetailsPane"/>
+          </Group>
+          <Group CommandName="cmdGrpLayout">
+            <SizeDefinition>
+              <ControlNameMap>
+                <ControlNameDefinition Name="xl"/>
+                <ControlNameDefinition Name="l"/>
+                <ControlNameDefinition Name="m"/>
+                <ControlNameDefinition Name="s"/>
+                <ControlNameDefinition Name="list"/>
+                <ControlNameDefinition Name="det"/>
+                <ControlNameDefinition Name="tile"/>
+                <ControlNameDefinition Name="cont"/>
+              </ControlNameMap>
+              <GroupSizeDefinition Size="Large">
+                <Row><ControlSizeDefinition ControlName="xl" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="l" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="m" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="s" IsImageVisible="true"    ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="list" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="det" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="tile" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="cont" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Medium">
+                <Row><ControlSizeDefinition ControlName="xl" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="l" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="m" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="s" IsImageVisible="true"    ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="list" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="det" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="tile" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="cont" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Small">
+                <Row><ControlSizeDefinition ControlName="xl" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="l" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="m" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="s" IsImageVisible="true"    ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="list" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="det" IsImageVisible="true"  ImageSize="Small" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="tile" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="cont" IsImageVisible="true" ImageSize="Small" IsLabelVisible="true"/></Row>
+              </GroupSizeDefinition>
+            </SizeDefinition>
+            <ToggleButton CommandName="cmdViewXL"/>
+            <ToggleButton CommandName="cmdViewL"/>
+            <ToggleButton CommandName="cmdViewM"/>
+            <ToggleButton CommandName="cmdViewS"/>
+            <ToggleButton CommandName="cmdViewList"/>
+            <ToggleButton CommandName="cmdViewDetails"/>
+            <ToggleButton CommandName="cmdViewTiles"/>
+            <ToggleButton CommandName="cmdViewContent"/>
+          </Group>
+          <Group CommandName="cmdGrpCurView" SizeDefinition="FourButtons">
+            <DropDownButton CommandName="cmdSortBy">
+              <MenuGroup>
+                <ToggleButton CommandName="cmdSortName"/>
+                <ToggleButton CommandName="cmdSortDate"/>
+                <ToggleButton CommandName="cmdSortType"/>
+                <ToggleButton CommandName="cmdSortSize"/>
+              </MenuGroup>
+              <MenuGroup>
+                <ToggleButton CommandName="cmdSortAsc"/>
+                <ToggleButton CommandName="cmdSortDesc"/>
+              </MenuGroup>
+            </DropDownButton>
+            <DropDownButton CommandName="cmdGroupBy">
+              <MenuGroup>
+                <ToggleButton CommandName="cmdGroupName"/>
+                <ToggleButton CommandName="cmdGroupDate"/>
+                <ToggleButton CommandName="cmdGroupType"/>
+                <ToggleButton CommandName="cmdGroupSize"/>
+              </MenuGroup>
+              <MenuGroup>
+                <ToggleButton CommandName="cmdGroupNone"/>
+              </MenuGroup>
+            </DropDownButton>
+            <DropDownButton CommandName="cmdAddColumns">
+              <MenuGroup>
+                <ToggleButton CommandName="cmdColDate"/>
+                <ToggleButton CommandName="cmdColType"/>
+                <ToggleButton CommandName="cmdColSize"/>
+                <ToggleButton CommandName="cmdColCreated"/>
+                <ToggleButton CommandName="cmdColAuthor"/>
+                <ToggleButton CommandName="cmdColTags"/>
+                <ToggleButton CommandName="cmdColTitle"/>
+              </MenuGroup>
+            </DropDownButton>
+            <Button CommandName="cmdSizeColumns"/>
+          </Group>
+          <Group CommandName="cmdGrpShowHide">
+            <SizeDefinition>
+              <ControlNameMap>
+                <ControlNameDefinition Name="chk"/>
+                <ControlNameDefinition Name="ext"/>
+                <ControlNameDefinition Name="hid"/>
+                <ControlNameDefinition Name="hidesel"/>
+              </ControlNameMap>
+              <GroupSizeDefinition Size="Large">
+                <Row><ControlSizeDefinition ControlName="chk" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="ext" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="hid" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <ControlSizeDefinition ControlName="hidesel" IsImageVisible="true" ImageSize="Large" IsLabelVisible="true"/>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Medium">
+                <Row><ControlSizeDefinition ControlName="chk" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="ext" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="hid" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <ControlSizeDefinition ControlName="hidesel" IsImageVisible="true" ImageSize="Large" IsLabelVisible="true"/>
+              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Small">
+                <Row><ControlSizeDefinition ControlName="chk" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="ext" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="hid" IsImageVisible="true" IsLabelVisible="true"/></Row>
+                <ColumnBreak ShowSeparator="false"/>
+                <ControlSizeDefinition ControlName="hidesel" IsImageVisible="true" ImageSize="Large" IsLabelVisible="true"/>
+              </GroupSizeDefinition>
+            </SizeDefinition>
+            <CheckBox CommandName="cmdCheckBoxes"/>
+            <CheckBox CommandName="cmdShowExt"/>
+            <CheckBox CommandName="cmdShowHidden"/>
+            <Button CommandName="cmdHideSelected"/>
+          </Group>
+          <Group CommandName="cmdGrpOptions">
+            <SizeDefinition>
+              <ControlNameMap>
+                <ControlNameDefinition Name="opt"/>
+                <ControlNameDefinition Name="rs"/>
+                <ControlNameDefinition Name="tab"/>
+              </ControlNameMap>
+              <GroupSizeDefinition Size="Large">
+                <ControlSizeDefinition ControlName="opt" ImageSize="Large" IsLabelVisible="true" IsImageVisible="true"/>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="rs" IsLabelVisible="true" IsImageVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="tab" IsLabelVisible="true" IsImageVisible="true"/></Row>              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Medium">
+                <ControlSizeDefinition ControlName="opt" ImageSize="Large" IsLabelVisible="true" IsImageVisible="true"/>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="rs" IsLabelVisible="true" IsImageVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="tab" IsLabelVisible="true" IsImageVisible="true"/></Row>              </GroupSizeDefinition>
+              <GroupSizeDefinition Size="Small">
+                <ControlSizeDefinition ControlName="opt" ImageSize="Large" IsLabelVisible="true" IsImageVisible="true"/>
+                <ColumnBreak ShowSeparator="false"/>
+                <Row><ControlSizeDefinition ControlName="rs" IsLabelVisible="true" IsImageVisible="true"/></Row>
+                <Row><ControlSizeDefinition ControlName="tab" IsLabelVisible="true" IsImageVisible="true"/></Row>              </GroupSizeDefinition>
+            </SizeDefinition>
+            <Button CommandName="cmdOptions"/>
+            <CheckBox CommandName="cmdRestoreSession"/>
+            <CheckBox CommandName="cmdOpenInTab"/>
+          </Group>
+
+          <!-- SPEC §9 추가: 분할 그룹 -->
+          <Group CommandName="cmdGrpSplit" SizeDefinition="ThreeButtons">
+            <Button CommandName="cmdSplitV"/>
+            <Button CommandName="cmdSplitH"/>
+            <Button CommandName="cmdClosePane"/>
+          </Group>
+        </Tab>
+      </Ribbon.Tabs>
+
+      <Ribbon.ContextualTabs>
+        <TabGroup CommandName="cmdTabGroupDrive">
+          <Tab CommandName="cmdTabDrive">
+            <Group CommandName="cmdGrpDriveManage" SizeDefinition="ThreeButtons">
+              <Button CommandName="cmdOptimize"/>
+              <Button CommandName="cmdCleanup"/>
+              <Button CommandName="cmdFormat"/>
+            </Group>
+            <Group CommandName="cmdGrpDriveMedia" SizeDefinition="OneButton">
+              <Button CommandName="cmdEject"/>
+            </Group>
+          </Tab>
+        </TabGroup>
+        <TabGroup CommandName="cmdTabGroupPicture">
+          <Tab CommandName="cmdTabPicture">
+            <Group CommandName="cmdGrpRotate" SizeDefinition="TwoButtons">
+              <Button CommandName="cmdRotateLeft"/>
+              <Button CommandName="cmdRotateRight"/>
+            </Group>
+            <Group CommandName="cmdGrpPicView" SizeDefinition="OneButton">
+              <Button CommandName="cmdSetBackground"/>
+            </Group>
+          </Tab>
+        </TabGroup>
+      </Ribbon.ContextualTabs>
+    </Ribbon>
+  </Application.Views>
+</Application>

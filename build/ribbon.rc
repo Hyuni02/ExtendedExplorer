@@ -1,0 +1,603 @@
+// ******************************************************************************
+// * This is an automatically generated file containing the ribbon resource for *
+// * your application.                                                          *
+// ******************************************************************************
+
+#include ".\ribbon_ids.h"
+
+STRINGTABLE 
+BEGIN
+    cmdTabHome_LabelTitle_RESID L"\xd648" /* LabelTitle cmdTabHome_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabHome_Keytip_RESID L"H" /* Keytip cmdTabHome_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabShare_LabelTitle_RESID L"\xacf5\xc720" /* LabelTitle cmdTabShare_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabShare_Keytip_RESID L"S" /* Keytip cmdTabShare_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabView_LabelTitle_RESID L"\xbcf4\xae30" /* LabelTitle cmdTabView_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabView_Keytip_RESID L"V" /* Keytip cmdTabView_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabGroupDrive_LabelTitle_RESID L"\xb4dc\xb77c\xc774\xbe0c \xb3c4\xad6c" /* LabelTitle cmdTabGroupDrive_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabDrive_LabelTitle_RESID L"\xad00\xb9ac" /* LabelTitle cmdTabDrive_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabDrive_Keytip_RESID L"JD" /* Keytip cmdTabDrive_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabGroupPicture_LabelTitle_RESID L"\xc0ac\xc9c4 \xb3c4\xad6c" /* LabelTitle cmdTabGroupPicture_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabPicture_LabelTitle_RESID L"\xad00\xb9ac" /* LabelTitle cmdTabPicture_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdTabPicture_Keytip_RESID L"JP" /* Keytip cmdTabPicture_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdFileMenu_LabelTitle_RESID L"\xd30c\xc77c" /* LabelTitle cmdFileMenu_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdFileMenu_Keytip_RESID L"F" /* Keytip cmdFileMenu_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpClipboard_LabelTitle_RESID L"\xd074\xb9bd\xbcf4\xb4dc" /* LabelTitle cmdGrpClipboard_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpOrganize_LabelTitle_RESID L"\xad6c\xc131" /* LabelTitle cmdGrpOrganize_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpNew_LabelTitle_RESID L"\xc0c8\xb85c \xb9cc\xb4e4\xae30" /* LabelTitle cmdGrpNew_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpOpen_LabelTitle_RESID L"\xc5f4\xae30" /* LabelTitle cmdGrpOpen_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpSelect_LabelTitle_RESID L"\xc120\xd0dd" /* LabelTitle cmdGrpSelect_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpTab_LabelTitle_RESID L"\xd0ed" /* LabelTitle cmdGrpTab_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpSend_LabelTitle_RESID L"\xbcf4\xb0b4\xae30" /* LabelTitle cmdGrpSend_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpSecurity_LabelTitle_RESID L"\xbcf4\xc548" /* LabelTitle cmdGrpSecurity_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpPanes_LabelTitle_RESID L"\xcc3d" /* LabelTitle cmdGrpPanes_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpLayout_LabelTitle_RESID L"\xb808\xc774\xc544\xc6c3" /* LabelTitle cmdGrpLayout_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpCurView_LabelTitle_RESID L"\xd604\xc7ac \xbcf4\xae30" /* LabelTitle cmdGrpCurView_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpShowHide_LabelTitle_RESID L"\xd45c\xc2dc/\xc228\xae30\xae30" /* LabelTitle cmdGrpShowHide_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpOptions_LabelTitle_RESID L"\xc635\xc158" /* LabelTitle cmdGrpOptions_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpSplit_LabelTitle_RESID L"\xbd84\xd560" /* LabelTitle cmdGrpSplit_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpDriveManage_LabelTitle_RESID L"\xad00\xb9ac" /* LabelTitle cmdGrpDriveManage_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpDriveMedia_LabelTitle_RESID L"\xbbf8\xb514\xc5b4" /* LabelTitle cmdGrpDriveMedia_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpRotate_LabelTitle_RESID L"\xd68c\xc804" /* LabelTitle cmdGrpRotate_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGrpPicView_LabelTitle_RESID L"\xbcf4\xae30" /* LabelTitle cmdGrpPicView_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdPin_LabelTitle_RESID L"\xc990\xaca8\xcc3e\xae30\xc5d0 \xace0\xc815" /* LabelTitle cmdPin_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdPin_TooltipDescription_RESID L"\xc120\xd0dd\xd55c \xd3f4\xb354(\xc5c6\xc73c\xba74 \xd604\xc7ac \xd3f4\xb354)\xb97c \xc990\xaca8\xcc3e\xae30\xc5d0 \xace0\xc815\xd569\xb2c8\xb2e4." /* TooltipDescription cmdPin_TooltipDescription_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdCopy_LabelTitle_RESID L"\xbcf5\xc0ac" /* LabelTitle cmdCopy_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdPaste_LabelTitle_RESID L"\xbd99\xc5ec\xb123\xae30" /* LabelTitle cmdPaste_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdCut_LabelTitle_RESID L"\xc798\xb77c\xb0b4\xae30" /* LabelTitle cmdCut_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdCopyPath_LabelTitle_RESID L"\xacbd\xb85c \xbcf5\xc0ac" /* LabelTitle cmdCopyPath_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdPasteShortcut_LabelTitle_RESID L"\xbc14\xb85c \xac00\xae30 \xbd99\xc5ec\xb123\xae30" /* LabelTitle cmdPasteShortcut_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdMoveTo_LabelTitle_RESID L"\xc774\xb3d9 \xc704\xce58" /* LabelTitle cmdMoveTo_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdCopyTo_LabelTitle_RESID L"\xbcf5\xc0ac \xc704\xce58" /* LabelTitle cmdCopyTo_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdDelete_LabelTitle_RESID L"\xc0ad\xc81c" /* LabelTitle cmdDelete_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdRecycle_LabelTitle_RESID L"\xd734\xc9c0\xd1b5\xc73c\xb85c \xc774\xb3d9" /* LabelTitle cmdRecycle_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdDeletePerm_LabelTitle_RESID L"\xc601\xad6c\xd788 \xc0ad\xc81c" /* LabelTitle cmdDeletePerm_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdDeleteMenu_LabelTitle_RESID L"\xc0ad\xc81c" /* LabelTitle cmdDeleteMenu_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdRename_LabelTitle_RESID L"\xc774\xb984 \xbc14\xafb8\xae30" /* LabelTitle cmdRename_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdNewFolder_LabelTitle_RESID L"\xc0c8 \xd3f4\xb354" /* LabelTitle cmdNewFolder_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdNewItem_LabelTitle_RESID L"\xc0c8 \xd56d\xbaa9" /* LabelTitle cmdNewItem_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdProperties_LabelTitle_RESID L"\xc18d\xc131" /* LabelTitle cmdProperties_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSelectAll_LabelTitle_RESID L"\xbaa8\xb450 \xc120\xd0dd" /* LabelTitle cmdSelectAll_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSelectNone_LabelTitle_RESID L"\xc120\xd0dd \xc548 \xd568" /* LabelTitle cmdSelectNone_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdInvertSel_LabelTitle_RESID L"\xc120\xd0dd \xc601\xc5ed \xbc18\xc804" /* LabelTitle cmdInvertSel_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdNewTab_LabelTitle_RESID L"\xc0c8 \xd0ed" /* LabelTitle cmdNewTab_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdShare_LabelTitle_RESID L"\xacf5\xc720" /* LabelTitle cmdShare_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdEmail_LabelTitle_RESID L"\xc804\xc790 \xba54\xc77c" /* LabelTitle cmdEmail_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdZip_LabelTitle_RESID L"\xc555\xcd95(ZIP)" /* LabelTitle cmdZip_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdBurn_LabelTitle_RESID L"\xb514\xc2a4\xd06c\xc5d0 \xad7d\xae30" /* LabelTitle cmdBurn_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdPrint_LabelTitle_RESID L"\xc778\xc1c4" /* LabelTitle cmdPrint_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdFax_LabelTitle_RESID L"\xd329\xc2a4" /* LabelTitle cmdFax_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSecurity_LabelTitle_RESID L"\xace0\xae09 \xbcf4\xc548" /* LabelTitle cmdSecurity_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdNavPane_LabelTitle_RESID L"\xd0d0\xc0c9 \xcc3d" /* LabelTitle cmdNavPane_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdPreviewPane_LabelTitle_RESID L"\xbbf8\xb9ac \xbcf4\xae30 \xcc3d" /* LabelTitle cmdPreviewPane_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdDetailsPane_LabelTitle_RESID L"\xc138\xbd80 \xc815\xbcf4 \xcc3d" /* LabelTitle cmdDetailsPane_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewXL_LabelTitle_RESID L"\xc544\xc8fc \xd070 \xc544\xc774\xcf58" /* LabelTitle cmdViewXL_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewL_LabelTitle_RESID L"\xd070 \xc544\xc774\xcf58" /* LabelTitle cmdViewL_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewM_LabelTitle_RESID L"\xbcf4\xd1b5 \xc544\xc774\xcf58" /* LabelTitle cmdViewM_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewS_LabelTitle_RESID L"\xc791\xc740 \xc544\xc774\xcf58" /* LabelTitle cmdViewS_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewList_LabelTitle_RESID L"\xbaa9\xb85d" /* LabelTitle cmdViewList_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewDetails_LabelTitle_RESID L"\xc790\xc138\xd788" /* LabelTitle cmdViewDetails_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewTiles_LabelTitle_RESID L"\xbc14\xb451\xd310\xc2dd" /* LabelTitle cmdViewTiles_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdViewContent_LabelTitle_RESID L"\xb0b4\xc6a9" /* LabelTitle cmdViewContent_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSortBy_LabelTitle_RESID L"\xc815\xb82c \xae30\xc900" /* LabelTitle cmdSortBy_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSortName_LabelTitle_RESID L"\xc774\xb984" /* LabelTitle cmdSortName_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSortDate_LabelTitle_RESID L"\xc218\xc815\xd55c \xb0a0\xc9dc" /* LabelTitle cmdSortDate_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSortType_LabelTitle_RESID L"\xc720\xd615" /* LabelTitle cmdSortType_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSortSize_LabelTitle_RESID L"\xd06c\xae30" /* LabelTitle cmdSortSize_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSortAsc_LabelTitle_RESID L"\xc624\xb984\xcc28\xc21c" /* LabelTitle cmdSortAsc_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSortDesc_LabelTitle_RESID L"\xb0b4\xb9bc\xcc28\xc21c" /* LabelTitle cmdSortDesc_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGroupBy_LabelTitle_RESID L"\xbd84\xb958 \xbc29\xbc95" /* LabelTitle cmdGroupBy_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGroupName_LabelTitle_RESID L"\xc774\xb984" /* LabelTitle cmdGroupName_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGroupDate_LabelTitle_RESID L"\xc218\xc815\xd55c \xb0a0\xc9dc" /* LabelTitle cmdGroupDate_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGroupType_LabelTitle_RESID L"\xc720\xd615" /* LabelTitle cmdGroupType_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGroupSize_LabelTitle_RESID L"\xd06c\xae30" /* LabelTitle cmdGroupSize_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdGroupNone_LabelTitle_RESID L"(\xc5c6\xc74c)" /* LabelTitle cmdGroupNone_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdAddColumns_LabelTitle_RESID L"\xc5f4 \xcd94\xac00" /* LabelTitle cmdAddColumns_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdColDate_LabelTitle_RESID L"\xc218\xc815\xd55c \xb0a0\xc9dc" /* LabelTitle cmdColDate_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdColType_LabelTitle_RESID L"\xc720\xd615" /* LabelTitle cmdColType_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdColSize_LabelTitle_RESID L"\xd06c\xae30" /* LabelTitle cmdColSize_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdColCreated_LabelTitle_RESID L"\xb9cc\xb4e0 \xb0a0\xc9dc" /* LabelTitle cmdColCreated_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdColAuthor_LabelTitle_RESID L"\xc791\xc131\xc790" /* LabelTitle cmdColAuthor_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdColTags_LabelTitle_RESID L"\xd0dc\xadf8" /* LabelTitle cmdColTags_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdColTitle_LabelTitle_RESID L"\xc81c\xbaa9" /* LabelTitle cmdColTitle_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSizeColumns_LabelTitle_RESID L"\xbaa8\xb4e0 \xc5f4 \xb108\xbe44 \xc870\xc815" /* LabelTitle cmdSizeColumns_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdCheckBoxes_LabelTitle_RESID L"\xd56d\xbaa9 \xd655\xc778\xb780" /* LabelTitle cmdCheckBoxes_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdShowExt_LabelTitle_RESID L"\xd30c\xc77c \xd655\xc7a5\xba85" /* LabelTitle cmdShowExt_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdShowHidden_LabelTitle_RESID L"\xc228\xae34 \xd56d\xbaa9" /* LabelTitle cmdShowHidden_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdHideSelected_LabelTitle_RESID L"\xc120\xd0dd\xd55c \xd56d\xbaa9 \xc228\xae30\xae30" /* LabelTitle cmdHideSelected_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdOptions_LabelTitle_RESID L"\xc635\xc158" /* LabelTitle cmdOptions_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdRestoreSession_LabelTitle_RESID L"\xc138\xc158 \xbcf5\xc6d0" /* LabelTitle cmdRestoreSession_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdRestoreSession_TooltipDescription_RESID L"\xc885\xb8cc\xd560 \xb54c \xd0ed\x00b7\xbd84\xd560\x00b7\xacbd\xb85c\xb97c \xc800\xc7a5\xd558\xace0 \xb2e4\xc74c \xc2e4\xd589 \xb54c \xbcf5\xc6d0\xd569\xb2c8\xb2e4." /* TooltipDescription cmdRestoreSession_TooltipDescription_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdOpenInTab_LabelTitle_RESID L"\xd3f4\xb354\xb97c \xc0c8 \xd0ed\xc73c\xb85c" /* LabelTitle cmdOpenInTab_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdOpenInTab_TooltipDescription_RESID L"\xd3f4\xb354\xb97c \xc5f4\xba74 \xc2e4\xd589 \xc911\xc778 \xcc3d\xc758 \xc0c8 \xd0ed\xc73c\xb85c \xc5fd\xb2c8\xb2e4. \xb044\xba74 \xc0c8 \xcc3d\xc73c\xb85c \xc5fd\xb2c8\xb2e4." /* TooltipDescription cmdOpenInTab_TooltipDescription_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSplitV_LabelTitle_RESID L"\xc88c\xc6b0 \xbd84\xd560" /* LabelTitle cmdSplitV_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSplitV_TooltipDescription_RESID L"Ctrl+R" /* TooltipDescription cmdSplitV_TooltipDescription_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSplitH_LabelTitle_RESID L"\xc0c1\xd558 \xbd84\xd560" /* LabelTitle cmdSplitH_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSplitH_TooltipDescription_RESID L"Ctrl+Shift+R" /* TooltipDescription cmdSplitH_TooltipDescription_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdClosePane_LabelTitle_RESID L"Pane \xb2eb\xae30" /* LabelTitle cmdClosePane_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdClosePane_TooltipDescription_RESID L"Ctrl+W" /* TooltipDescription cmdClosePane_TooltipDescription_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdNewWindow_LabelTitle_RESID L"\xc0c8 \xcc3d \xc5f4\xae30" /* LabelTitle cmdNewWindow_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdOpenPS_LabelTitle_RESID L"Windows PowerShell \xc5f4\xae30" /* LabelTitle cmdOpenPS_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdOpenCmd_LabelTitle_RESID L"\xba85\xb839 \xd504\xb86c\xd504\xd2b8 \xc5f4\xae30" /* LabelTitle cmdOpenCmd_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdClose_LabelTitle_RESID L"\xb2eb\xae30" /* LabelTitle cmdClose_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdOptimize_LabelTitle_RESID L"\xcd5c\xc801\xd654" /* LabelTitle cmdOptimize_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdCleanup_LabelTitle_RESID L"\xc815\xb9ac" /* LabelTitle cmdCleanup_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdFormat_LabelTitle_RESID L"\xd3ec\xb9f7" /* LabelTitle cmdFormat_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdEject_LabelTitle_RESID L"\xaebc\xb0b4\xae30" /* LabelTitle cmdEject_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdRotateLeft_LabelTitle_RESID L"\xc67c\xcabd\xc73c\xb85c \xd68c\xc804" /* LabelTitle cmdRotateLeft_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdRotateRight_LabelTitle_RESID L"\xc624\xb978\xcabd\xc73c\xb85c \xd68c\xc804" /* LabelTitle cmdRotateRight_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    cmdSetBackground_LabelTitle_RESID L"\xbc30\xacbd\xc73c\xb85c \xc124\xc815" /* LabelTitle cmdSetBackground_LabelTitle_RESID: (null) */
+END
+
+APPLICATION_RIBBON    UIFILE    "build\\ribbon.bml"
