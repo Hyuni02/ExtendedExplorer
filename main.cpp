@@ -50,6 +50,7 @@ static const UINT WM_APP_RIBBON  = WM_APP + 2;   // 리본 명령은 콜백 밖�
 static const UINT WM_APP_ENDTAB  = WM_APP + 3;   // 탭 이름 편집 상자가 포커스를 잃음
 static const UINT WM_APP_NAV     = WM_APP + 4;   // wp=Node*, lp=PIDL(받는 쪽이 해제). 셸 콜백 밖에서 이동
 static const ULONG_PTR COPY_OPEN = 0x4545;       // WM_COPYDATA: 다른 프로세스가 폴더를 새 탭으로 열어 달라고 함
+static const UINT WM_APP_FALLBACK = WM_APP + 6;  // wp=Node*: 넘겨받은 경로를 못 열었다 → 탭을 닫고 탐색기로
 
 // 색 토큰. SPEC §12: 시스템 라이트/다크를 따라 ApplyPalette가 바꾼다.
 struct Palette { COLORREF strip, active, hover, text, dim, sep, gap, box, border, hot, hot2; };
@@ -102,6 +103,7 @@ struct Node {
     std::wstring query;              // 검색 상자 내용 (Pane별)
     bool  searching = false;         // 검색 결과로 가는 중
     PIDLIST_ABSOLUTE scope = nullptr;   // 검색 범위 (결과 안에서 다시 검색해도 원래 폴더 기준)
+    std::wstring external;           // 다른 프로그램이 열라고 넘긴 경로. 첫 이동이 실패하면 탐색기로 넘긴다 (SPEC §10)
     // Split
     int   dir = DIR_V;
     float ratio = 0.5f;
@@ -163,6 +165,7 @@ static HWND  g_tip = nullptr;            // 탭 툴팁 (포커스 Pane 전체 �
 static std::wstring g_dir, g_ini;
 static bool  g_restore = true;           // 종료 시 탭·분할·경로 저장, 다음 실행 때 복원
 static bool  g_openInTab = true;         // 폴더 열기 = 실행 중인 창의 새 탭 (아니면 새 창)
+static bool  g_starting = true;          // 창을 띄우기 전 (이때 닫히면 세션을 저장하지 않는다)
 static void IniSetInt(const wchar_t* sec, const wchar_t* key, int v);
 
 static int S(int v) { return MulDiv(v, (int)g_dpi, 96); }
@@ -221,7 +224,11 @@ struct Events : IExplorerBrowserEvents, IDispatch, IServiceProvider, ICommDlgBro
         return S_OK;
     }
     IFACEMETHODIMP OnNavigationFailed(PCIDLIST_ABSOLUTE) {
-        if (pane) { pane->pend = -1; pane->searching = false; }
+        if (pane) {
+            pane->pend = -1;
+            pane->searching = false;
+            if (!pane->external.empty()) PostMessageW(g_main, WM_APP_FALLBACK, (WPARAM)pane, 0);   // 콜백 밖에서
+        }
         return S_OK;
     }
     // IDispatch
@@ -270,6 +277,7 @@ static void OnPaneNavigated(Node* n, PCIDLIST_ABSOLUTE p) {
     n->pend = -1;
     if (n->searching) n->searching = false;
     else n->query.clear();              // 검색 결과를 벗어나면 검색어도 지운다 (Win10)
+    n->external.clear();                // 넘겨받은 경로가 열렸다 → 더는 탐색기로 넘길 일 없음
     if (n->tab && n->tab->focus == n) UpdateTabInfo(n->tab);
 }
 
@@ -3060,18 +3068,115 @@ static void SaveSettings() {
     SaveSession();
 }
 
+// ---- 실패하면 탐색기로 넘기기 (SPEC §10: 기본 파일 관리자가 폴더를 못 여는 일이 없게) ----------
+static ULONGLONG NowMs() {
+    FILETIME ft;
+    GetSystemTimeAsFileTime(&ft);
+    return (((ULONGLONG)ft.dwHighDateTime << 32) | ft.dwLowDateTime) / 10000;
+}
+
+// 같은 경로를 15초 안에 또 넘기려 하면 고리로 본다: 탐색기가 폴더 연결을 따라 다시 우리를 부르고,
+// 우리가 또 넘기고 … 를 끊는다. 기록은 설정 파일에 (프로세스가 매번 새로 뜨므로).
+static bool FallbackAllowed(const std::wstring& path, ULONGLONG now) {
+    std::wstring last = IniStr(L"Fallback", L"Path");
+    ULONGLONG t = _wcstoui64(IniStr(L"Fallback", L"Time").c_str(), nullptr, 10);
+    bool loop = !last.empty() && last == path && now >= t && now - t < 15000;
+    IniSet(L"Fallback", L"Path", path);
+    IniSet(L"Fallback", L"Time", std::to_wstring(now));
+    return !loop;
+}
+
+// 원래 탐색기(explorer.exe)로 연다. 고리면 넘기지 않고 알린다.
+static void OpenWithExplorer(const std::wstring& path) {
+    if (!FallbackAllowed(path, NowMs())) {
+        std::wstring msg = L"이 위치를 열 수 없습니다:\n" + path +
+                           L"\n\n파일 탐색기로 넘겼지만 다시 이 앱으로 돌아왔습니다.";
+        MessageBoxW(g_main, msg.c_str(), L"ExtendedExplorer", MB_ICONERROR);
+        return;
+    }
+    wchar_t exe[MAX_PATH];
+    GetWindowsDirectoryW(exe, MAX_PATH);
+    lstrcatW(exe, L"\\explorer.exe");
+    std::wstring arg = path.empty() ? L"" : L"\"" + path + L"\"";
+    ShellExecuteW(nullptr, L"open", exe, arg.c_str(), nullptr, SW_SHOWNORMAL);
+}
+
+// 다른 프로그램이 넘긴 경로를 새 탭으로 연다. 해석·Pane 생성이 안 되면 탐색기로 넘기고 false.
+// 이동이 나중에 실패하면 WM_APP_FALLBACK이 같은 일을 한다.
+static bool OpenExternal(const std::wstring& path) {
+    PIDLIST_ABSOLUTE p = nullptr;
+    if (FAILED(SHParseDisplayName(path.c_str(), nullptr, &p, 0, nullptr)) || !p) { OpenWithExplorer(path); return false; }
+    Tab* t = NewTabAt((int)g_tabs.size(), p, true);
+    ILFree(p);
+    if (!t->focus->eb) {   // 셸 브라우저를 못 만듦
+        CloseTab((int)(std::find(g_tabs.begin(), g_tabs.end(), t) - g_tabs.begin()));
+        OpenWithExplorer(path);
+        return false;
+    }
+    if (!CurPidl(t->focus)) t->focus->external = path;   // 아직 이동 중이면 실패 알림을 기다린다
+    return true;
+}
+
+static void FallbackPane(Node* n) {
+    bool alive = false;
+    ForEachPane([&](Node* x) { if (x == n) alive = true; });
+    if (!alive || n->external.empty()) return;
+    std::wstring path = n->external;
+    n->external.clear();
+    if (n->tab && n->tab->root == n) {   // 넘겨받은 경로로 막 만든 탭 → 닫는다 (마지막 탭이면 창도)
+        auto it = std::find(g_tabs.begin(), g_tabs.end(), n->tab);
+        if (it != g_tabs.end()) CloseTab((int)(it - g_tabs.begin()));
+    }
+    OpenWithExplorer(path);
+}
+
 // 다른 프로세스(폴더 열기)가 보낸 경로를 새 탭으로 열고 앞으로 가져온다
 static bool OpenFromOtherProcess(const COPYDATASTRUCT* cd) {
     if (!cd || cd->dwData != COPY_OPEN || cd->cbData < sizeof(wchar_t)) return false;
     std::wstring path((const wchar_t*)cd->lpData, cd->cbData / sizeof(wchar_t));
     path.resize(wcsnlen(path.c_str(), path.size()));
-    PIDLIST_ABSOLUTE p = nullptr;
-    if (FAILED(SHParseDisplayName(path.c_str(), nullptr, &p, 0, nullptr))) p = DefaultPidl();
-    NewTab(p);
-    ILFree(p);
-    if (IsIconic(g_main)) ShowWindow(g_main, SW_RESTORE);
-    SetForegroundWindow(g_main);
-    return true;
+    if (OpenExternal(path)) {
+        if (IsIconic(g_main)) ShowWindow(g_main, SW_RESTORE);
+        SetForegroundWindow(g_main);
+    }
+    return true;   // 열었거나 탐색기로 넘겼다 → 보낸 쪽은 끝내도 된다
+}
+
+// ---- 세션 자동 저장 (SPEC §11) ----------------------------------------------------
+// 예전에는 정상 종료 때만 저장해서 앱이 죽거나 강제 종료되면 탭이 사라졌다. 몇 초마다
+// 상태 요약을 만들어 바뀌었을 때만 저장한다 (파일 쓰기는 바뀔 때만).
+static const UINT_PTR TIMER_SESSION = 2;
+static std::wstring g_savedSig;
+
+static std::wstring SessionSignature() {
+    std::wstring s = std::to_wstring(g_cur) + L"|" + std::to_wstring(g_restore) + std::to_wstring(g_sideOn) +
+                     L"," + std::to_wstring(g_sideW96) + L"," + std::to_wstring(g_infoMode) + L"," + std::to_wstring(g_infoW96);
+    WINDOWPLACEMENT wp = { sizeof(wp) };
+    if (g_main && GetWindowPlacement(g_main, &wp)) {
+        RECT& r = wp.rcNormalPosition;
+        s += L"|" + std::to_wstring(r.left) + L"," + std::to_wstring(r.top) + L"," + std::to_wstring(r.right) +
+             L"," + std::to_wstring(r.bottom) + L"," + std::to_wstring(wp.showCmd);
+    }
+    for (Tab* t : g_tabs) {
+        std::wstring layout;
+        std::vector<Node*> leaves;
+        SerializeTree(t->root, layout, leaves);
+        s += L"|" + layout + (t->fixedName ? t->name : L"");
+        for (Node* n : leaves) {
+            PWSTR p = nullptr;
+            if (CurPidl(n) && SUCCEEDED(SHGetNameFromIDList(CurPidl(n), SIGDN_DESKTOPABSOLUTEPARSING, &p))) { s += L";" + std::wstring(p); CoTaskMemFree(p); }
+            if (n == t->focus) s += L"*";
+        }
+    }
+    return s;
+}
+
+static void AutoSave() {
+    if (g_ini.empty() || g_tabs.empty()) return;   // 마지막 탭을 닫는 중이면 WM_DESTROY가 저장
+    std::wstring sig = SessionSignature();
+    if (sig == g_savedSig) return;
+    SaveSettings();
+    g_savedSig = sig;
 }
 
 // ---- 테마 (SPEC §12: 시스템 라이트/다크) --------------------------------------
@@ -3723,6 +3828,7 @@ static LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM wp, LPARAM lp) {
         return 0;
     }
     case WM_TIMER:
+        if (wp == TIMER_SESSION) { AutoSave(); return 0; }
         if (wp == TIMER_INFO) {   // 선택이 빠르게 바뀌는 동안(방향키) 썸네일을 매번 만들지 않는다
             KillTimer(h, TIMER_INFO);
             ComputeInfo();
@@ -3864,10 +3970,16 @@ static LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM wp, LPARAM lp) {
     case WM_APP_INFO:      // 미리 보기 스레드의 결과
         ApplyInfoResult((InfoRes*)lp);
         return 0;
+    case WM_APP_FALLBACK:  // 넘겨받은 경로로 이동하지 못함 → 탐색기로
+        FallbackPane((Node*)wp);
+        return 0;
     case WM_DESTROY:
+        KillTimer(h, TIMER_SESSION);
         StopPreview();         // 미리 보기 처리기(다른 프로세스)를 먼저 내린다
         StopPreviewThread();   // 그 스레드가 처리기를 내리고 끝날 때까지 기다린다
-        SaveSettings();    // 탭이 살아 있을 때 (마지막 탭을 닫아 끝나면 빈 세션)
+        // 탭이 살아 있을 때 저장 (마지막 탭을 닫아 끝나면 빈 세션). 시작하다가 탐색기로 넘기고
+        // 창을 띄우지 않은 채 닫는 경우는 저장하지 않는다 → 기존 세션을 빈 것으로 덮지 않게.
+        if (!g_starting) SaveSettings();
         DestroyRibbon();   // 리본 상태도 저장
         for (Tab* t : g_tabs) { FreeSubtree(t->root); if (t->icon) DestroyIcon(t->icon); delete t; }
         g_tabs.clear();
@@ -4117,6 +4229,22 @@ int main() {
         g_ini.clear();
     }
 
+    // 탐색기로 넘기기: 같은 경로를 15초 안에 다시 넘기면 고리로 보고 막는다
+    {
+        wchar_t tmp[MAX_PATH];
+        GetTempPathW(MAX_PATH, tmp);
+        g_ini = std::wstring(tmp) + L"ee_selftest_fb.ini";
+        DeleteFileW(g_ini.c_str());
+        ULONGLONG t0 = 1000000;
+        assert(FallbackAllowed(L"C:\\가", t0));              // 처음
+        assert(!FallbackAllowed(L"C:\\가", t0 + 3000));      // 3초 뒤 같은 경로 = 고리
+        assert(FallbackAllowed(L"D:\\x", t0 + 4000));        // 다른 경로는 됨
+        assert(FallbackAllowed(L"D:\\x", t0 + 20000));       // 15초 지나면 다시 됨
+        assert(!FallbackAllowed(L"D:\\x", t0 + 21000));
+        DeleteFileW(g_ini.c_str());
+        g_ini.clear();
+    }
+
     ILFree(A); ILFree(B); ILFree(C);
     FreePane(c);
     printf("selftest ok\n");
@@ -4126,15 +4254,6 @@ int main() {
 int WINAPI wWinMain(HINSTANCE hi, HINSTANCE, LPWSTR, int show) {
     g_inst = hi;
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-    if (FAILED(OleInitialize(nullptr))) return 1;   // STA + 드래그&드롭
-
-    WNDCLASSEXW wc = { sizeof(wc) };
-    wc.lpfnWndProc = PaneProc;
-    wc.hInstance = hi;
-    wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wc.lpszClassName = kPaneClass;
-    g_paneAtom = RegisterClassExW(&wc);
-
     InitSettingsPath();
     LoadSettings();
 
@@ -4148,6 +4267,16 @@ int WINAPI wWinMain(HINSTANCE hi, HINSTANCE, LPWSTR, int show) {
         else if (argv[i][0] != L'/' && path.empty()) path = argv[i];
     }
     if (argv) LocalFree(argv);
+
+    // SPEC §10: 기본 파일 관리자가 뜨지 못하면 폴더를 원래 탐색기로라도 연다
+    if (FAILED(OleInitialize(nullptr))) { OpenWithExplorer(path); return 1; }   // STA + 드래그&드롭
+
+    WNDCLASSEXW wc = { sizeof(wc) };
+    wc.lpfnWndProc = PaneProc;
+    wc.hInstance = hi;
+    wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wc.lpszClassName = kPaneClass;
+    g_paneAtom = RegisterClassExW(&wc);
 
     // SPEC §11: 창 1개 = 프로세스 1개. 폴더 열기는 실행 중인 창의 새 탭으로 (설정)
     HWND other = FindWindowW(L"ExtendedExplorer", nullptr);
@@ -4176,7 +4305,7 @@ int WINAPI wWinMain(HINSTANCE hi, HINSTANCE, LPWSTR, int show) {
                              WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
                              CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                              nullptr, nullptr, hi, nullptr);
-    if (!g_main) return 1;
+    if (!g_main) { OpenWithExplorer(path); OleUninitialize(); return 1; }
     g_dpi = GetDpiForWindow(g_main);
 
     g_addrEdit = CreateWindowExW(0, L"EDIT", L"", WS_CHILD | ES_AUTOHSCROLL, 0, 0, 0, 0, g_main, nullptr, hi, nullptr);
@@ -4216,14 +4345,21 @@ int WINAPI wWinMain(HINSTANCE hi, HINSTANCE, LPWSTR, int show) {
 
     // 세션 복원은 첫 창에서만 (두 번째 창까지 복원하면 탭이 겹친다). 열 폴더가 있으면 그 뒤에 새 탭.
     bool restored = !other && !forceNew && g_restore && RestoreSession();
-    PIDLIST_ABSOLUTE start = nullptr;
-    if (!path.empty()) SHParseDisplayName(path.c_str(), nullptr, &start, 0, nullptr);
-    if (!start && !restored) start = DefaultPidl();
-    if (start) { NewTab(start); ILFree(start); }
+    bool opened = true;
+    if (!path.empty()) opened = OpenExternal(path);   // 못 열면 탐색기로 넘겼다
+    else if (!restored) { PIDLIST_ABSOLUTE d = DefaultPidl(); NewTab(d); ILFree(d); }
+    if (!opened || g_tabs.empty() || !IsWindow(g_main)) {   // 탐색기가 대신 열었으니 이 창은 띄우지 않는다
+        if (IsWindow(g_main)) DestroyWindow(g_main);
+        OleUninitialize();
+        return 0;
+    }
 
     ShowWindow(g_main, show);
     UpdateWindow(g_main);
     if (Cur()) FocusPane(Cur()->focus);
+    g_starting = false;
+    g_savedSig = SessionSignature();
+    SetTimer(g_main, TIMER_SESSION, 5000, nullptr);   // 바뀐 게 있으면 5초 안에 저장 (강제 종료 대비)
 
     MSG m;
     while (GetMessageW(&m, nullptr, 0, 0) > 0) {
