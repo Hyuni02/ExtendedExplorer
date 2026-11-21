@@ -51,6 +51,47 @@ static const UINT WM_APP_ENDTAB  = WM_APP + 3;   // 탭 이름 편집 상자가 
 static const UINT WM_APP_NAV     = WM_APP + 4;   // wp=Node*, lp=PIDL(받는 쪽이 해제). 셸 콜백 밖에서 이동
 static const ULONG_PTR COPY_OPEN = 0x4545;       // WM_COPYDATA: 다른 프로세스가 폴더를 새 탭으로 열어 달라고 함
 static const UINT WM_APP_FALLBACK = WM_APP + 6;  // wp=Node*: 넘겨받은 경로를 못 열었다 → 탭을 닫고 탐색기로
+static const UINT WM_APP_TOEXPLORER = WM_APP + 7; // wp=Node*, lp=std::wstring*(파싱 이름, 받는 쪽이 delete): 가상 폴더 → 탐색기로
+
+// ---- 탐색기에 맡길 가상 폴더 (SPEC §10) ---------------------------------------------
+// 제어판·장치 및 프린터·네트워크 연결 같은 셸 가상 폴더는 우리 Pane(ExplorerBrowser)에서 제대로
+// 동작하지 않거나 탐색기 창 기능에 기댄다 → 원래 탐색기로 연다. 파일 시스템 폴더(C:\…, \\서버)와
+// 아래 목록(Pane에서 잘 되는 가상 폴더)은 그대로 이 앱에서. 판정은 파싱 이름의 첫 ::{CLSID}.
+static const wchar_t* const kVirtualOk[] = {
+    L"20D04FE0-3AEA-1069-A2D8-08002B30309D",   // 내 PC
+    L"679F85CB-0220-4080-B29B-5540CC05AAB6",   // 즐겨찾기(바로 가기)
+    L"F874310E-B6B7-47DC-BC84-B9E6B38F5903",   // 홈 (Win11)
+    L"F02C1A0D-BE21-4350-88B0-7367FC96EF3C",   // 네트워크
+    L"645FF040-5081-101B-9F08-00AA002F954E",   // 휴지통
+    L"031E4825-7B94-4DC3-B131-E946B44C8DD5",   // 라이브러리
+    L"018D5C66-4533-4307-9B53-224DE2ED1FE6",   // OneDrive
+    L"59031A47-3F72-44A7-89C5-5595FE6B30EE",   // 사용자 폴더
+    L"9343812E-1C37-4A49-A12E-4B2D810D956B",   // 검색 결과
+};
+
+static bool NeedsExplorerName(const std::wstring& parsing) {
+    if (parsing.size() < 5 || parsing.compare(0, 3, L"::{") != 0) return false;   // 경로, UNC, 바탕 화면
+    size_t e = parsing.find(L'}', 3);
+    if (e == std::wstring::npos) return false;
+    std::wstring id = parsing.substr(3, e - 3);
+    for (const wchar_t* ok : kVirtualOk) if (!_wcsicmp(id.c_str(), ok)) return false;
+    return true;
+}
+
+// 파일 시스템이 아니고 위 목록에도 없으면 true. name에 파싱 이름 (탐색기에 넘길 인자).
+static bool NeedsExplorer(PCIDLIST_ABSOLUTE p, std::wstring* name = nullptr) {
+    if (!p || ILIsEmpty(p)) return false;
+    IShellItem* si = nullptr;
+    SFGAOF at = 0;
+    if (SUCCEEDED(SHCreateItemFromIDList(p, IID_PPV_ARGS(&si)))) { si->GetAttributes(SFGAO_FILESYSTEM, &at); si->Release(); }
+    if (at & SFGAO_FILESYSTEM) return false;
+    PWSTR s = nullptr;
+    if (FAILED(SHGetNameFromIDList(p, SIGDN_DESKTOPABSOLUTEPARSING, &s))) return false;
+    std::wstring n = s;
+    CoTaskMemFree(s);
+    if (name) *name = n;
+    return NeedsExplorerName(n);
+}
 
 // 색 토큰. SPEC §12: 시스템 라이트/다크를 따라 ApplyPalette가 바꾼다.
 struct Palette { COLORREF strip, active, hover, text, dim, sep, gap, box, border, hot, hot2; };
@@ -182,6 +223,7 @@ static void PaintInfo(HDC dc, RECT r);
 static void ToggleInfo(int mode);
 static void PlacePreview();
 static void StopPreview();
+static void OpenFocusInExplorer();
 static void ThemeWindowTree(HWND root);
 static int g_themePref = 0;   // settings.ini Theme: 0 시스템(기본), 1 라이트, 2 다크
 static void HookView(Node* n, IShellView* sv);
@@ -217,7 +259,14 @@ struct Events : IExplorerBrowserEvents, IDispatch, IServiceProvider, ICommDlgBro
         if (!r) delete this;
         return r;
     }
-    IFACEMETHODIMP OnNavigationPending(PCIDLIST_ABSOLUTE) { return S_OK; }
+    // 주소 표시줄·사이드바·링크 등 어디서 가든, 탐색기에 맡길 가상 폴더면 이동을 취소하고 탐색기로
+    IFACEMETHODIMP OnNavigationPending(PCIDLIST_ABSOLUTE p) {
+        std::wstring name;
+        if (!pane || pane->searching || !NeedsExplorer(p, &name)) return S_OK;
+        pane->external.clear();   // 실패 처리(WM_APP_FALLBACK)와 겹치지 않게
+        PostMessageW(g_main, WM_APP_TOEXPLORER, (WPARAM)pane, (LPARAM)new std::wstring(name));
+        return E_FAIL;            // 이동 취소
+    }
     IFACEMETHODIMP OnViewCreated(IShellView* sv) { if (pane) HookView(pane, sv); return S_OK; }
     IFACEMETHODIMP OnNavigationComplete(PCIDLIST_ABSOLUTE p) {
         if (pane) OnPaneNavigated(pane, p);
@@ -2466,6 +2515,7 @@ static void RibbonExec(UINT id) {
     case cmdOpenPS:        OpenShellHere(L"powershell.exe"); break;
     case cmdOpenCmd:       OpenShellHere(L"cmd.exe"); break;
     case cmdClose:         PostMessageW(g_main, WM_CLOSE, 0, 0); break;
+    case cmdOpenInExplorer: OpenFocusInExplorer(); break;
     case cmdOptimize: case cmdCleanup: case cmdFormat: case cmdEject:
                            DriveCmd(id); break;
     // ponytail: 회전 동사는 셸 이미지 확장(ShellImagePreview)이 있어야 동작
@@ -2525,7 +2575,9 @@ static void ShowPaneMenu(Node* n, POINT pt, bool keyboard) {
     if (cmd >= PM_FIRST_SHELL && cmd <= PM_LAST_SHELL &&
         FAILED(cm->GetCommandString(cmd - PM_FIRST_SHELL, GCS_VERBW, nullptr, (LPSTR)verb, 64))) verb[0] = 0;
     // "열기"는 등록 여부와 상관없이 이 Pane 안에서 (SPEC §10)
-    bool inPlace = (!lstrcmpiW(verb, L"open") || !lstrcmpiW(verb, L"explore")) && OpenFolderInPlace(n);
+    // register.ps1이 폴더 기본 동작으로 등록하는 동사 "ExtendedExplorer"도 같다 (새 탭이 아니라 이 Pane에서)
+    bool inPlace = (!lstrcmpiW(verb, L"open") || !lstrcmpiW(verb, L"explore") || !lstrcmpiW(verb, L"ExtendedExplorer")) &&
+                   OpenFolderInPlace(n);
     if (cmd >= PM_FIRST_SHELL && cmd <= PM_LAST_SHELL && !inPlace) {
         CMINVOKECOMMANDINFOEX ici = { sizeof(ici) };
         ici.fMask = CMIC_MASK_UNICODE | CMIC_MASK_PTINVOKE |
@@ -2701,7 +2753,7 @@ static const CmdGlyph kGlyphs[] = {
     { cmdSortBy, 0xE8CB, IC_N }, { cmdGroupBy, 0xE71D, IC_N }, { cmdAddColumns, 0xE710, IC_N }, { cmdSizeColumns, 0xE740, IC_N },
     { cmdHideSelected, 0xED1A, IC_N }, { cmdOptions, 0xE713, IC_N },
     { cmdSplitV, 1, IC_B }, { cmdSplitH, 2, IC_B }, { cmdClosePane, 3, IC_R },
-    { cmdNewWindow, 0xE78B, IC_B }, { cmdOpenPS, 0xE756, IC_B }, { cmdOpenCmd, 0xE756, IC_N }, { cmdClose, 0xE711, IC_N },
+    { cmdNewWindow, 0xE78B, IC_B }, { cmdOpenInExplorer, 0xE8DA, IC_Y }, { cmdOpenPS, 0xE756, IC_B }, { cmdOpenCmd, 0xE756, IC_N }, { cmdClose, 0xE711, IC_N },
     { cmdOptimize, 0xE9F5, IC_B }, { cmdCleanup, 0xE74D, IC_N }, { cmdFormat, 0xE7F8, IC_N }, { cmdEject, 0xE7E7, IC_N },
     { cmdRotateLeft, 0xE7AD, IC_B }, { cmdRotateRight, 0xE7AD, IC_B }, { cmdSetBackground, 0xE91B, IC_N },
 };
@@ -3003,6 +3055,7 @@ static bool RestoreSession() {
             std::wstring path = IniStr(sec.c_str(), (L"Path" + std::to_wstring(k)).c_str());
             PIDLIST_ABSOLUTE p = nullptr;
             if (path.empty() || FAILED(SHParseDisplayName(path.c_str(), nullptr, &p, 0, nullptr))) p = DefaultPidl();
+            if (NeedsExplorer(p)) { ILFree(p); p = DefaultPidl(); }   // 예전 세션의 제어판 등은 복원하지 않는다
             pidls.push_back(p);
         }
         Tab* t = new Tab;
@@ -3086,9 +3139,10 @@ static bool FallbackAllowed(const std::wstring& path, ULONGLONG now) {
     return !loop;
 }
 
-// 원래 탐색기(explorer.exe)로 연다. 고리면 넘기지 않고 알린다.
-static void OpenWithExplorer(const std::wstring& path) {
-    if (!FallbackAllowed(path, NowMs())) {
+// 원래 탐색기(explorer.exe)로 연다. guard: 밖에서 넘겨받은 경로면 고리 검사 (고리면 넘기지 않고 알린다).
+// 앱 안에서 일부러 넘기는 것(제어판 클릭, "파일 탐색기에서 열기")은 고리가 아니므로 검사하지 않는다.
+static void OpenWithExplorer(const std::wstring& path, bool guard = true) {
+    if (guard && !FallbackAllowed(path, NowMs())) {
         std::wstring msg = L"이 위치를 열 수 없습니다:\n" + path +
                            L"\n\n파일 탐색기로 넘겼지만 다시 이 앱으로 돌아왔습니다.";
         MessageBoxW(g_main, msg.c_str(), L"ExtendedExplorer", MB_ICONERROR);
@@ -3106,6 +3160,7 @@ static void OpenWithExplorer(const std::wstring& path) {
 static bool OpenExternal(const std::wstring& path) {
     PIDLIST_ABSOLUTE p = nullptr;
     if (FAILED(SHParseDisplayName(path.c_str(), nullptr, &p, 0, nullptr)) || !p) { OpenWithExplorer(path); return false; }
+    if (NeedsExplorer(p)) { ILFree(p); OpenWithExplorer(path); return false; }   // 제어판 등: 탭을 만들지 않고 바로
     Tab* t = NewTabAt((int)g_tabs.size(), p, true);
     ILFree(p);
     if (!t->focus->eb) {   // 셸 브라우저를 못 만듦
@@ -3128,6 +3183,30 @@ static void FallbackPane(Node* n) {
         if (it != g_tabs.end()) CloseTab((int)(it - g_tabs.begin()));
     }
     OpenWithExplorer(path);
+}
+
+// 앱 안에서 탐색기에 맡길 가상 폴더로 가려다 취소됨: 탐색기로 연다.
+// 아직 아무 데도 가지 않은 새 탭(가운데 클릭으로 연 제어판 등)이면 빈 탭이 남지 않게 닫는다.
+static void PaneToExplorer(Node* n, std::wstring* name) {
+    OpenWithExplorer(*name, false);
+    delete name;
+    bool alive = false;
+    ForEachPane([&](Node* x) { if (x == n) alive = true; });
+    if (alive && !CurPidl(n) && n->tab && n->tab->root == n) {
+        auto it = std::find(g_tabs.begin(), g_tabs.end(), n->tab);
+        if (it != g_tabs.end()) CloseTab((int)(it - g_tabs.begin()));
+    }
+}
+
+// 파일 메뉴 "파일 탐색기에서 열기": 지금 보는 위치를 원래 탐색기로 (호환되지 않는 폴더에서 빠져나가기)
+static void OpenFocusInExplorer() {
+    PWSTR s = nullptr;
+    std::wstring name;
+    if (CurPidl(FocusNode()) && SUCCEEDED(SHGetNameFromIDList(CurPidl(FocusNode()), SIGDN_DESKTOPABSOLUTEPARSING, &s))) {
+        name = s;
+        CoTaskMemFree(s);
+    }
+    OpenWithExplorer(name, false);
 }
 
 // 다른 프로세스(폴더 열기)가 보낸 경로를 새 탭으로 열고 앞으로 가져온다
@@ -3973,6 +4052,9 @@ static LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM wp, LPARAM lp) {
     case WM_APP_FALLBACK:  // 넘겨받은 경로로 이동하지 못함 → 탐색기로
         FallbackPane((Node*)wp);
         return 0;
+    case WM_APP_TOEXPLORER:   // 제어판 등 가상 폴더 → 탐색기로
+        PaneToExplorer((Node*)wp, (std::wstring*)lp);
+        return 0;
     case WM_DESTROY:
         KillTimer(h, TIMER_SESSION);
         StopPreview();         // 미리 보기 처리기(다른 프로세스)를 먼저 내린다
@@ -4066,6 +4148,28 @@ int main() {
     assert(SR);
     ILFree(SR);
     assert(!BuildSearch(A, L""));
+
+    // 탐색기에 맡길 가상 폴더 판정
+    assert(NeedsExplorerName(L"::{26EE0668-A00A-44D7-9371-BEB064C98683}\\0"));                    // 제어판
+    assert(NeedsExplorerName(L"::{A8A91A66-3A7D-4424-8D24-04E180695C7A}"));                       // 장치 및 프린터
+    assert(NeedsExplorerName(L"::{21EC2020-3AEA-1069-A2DD-08002B30309D}\\::{2227A280-3AEA-1069-A2DE-08002B30309D}"));   // 프린터
+    assert(!NeedsExplorerName(L"::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"));                      // 내 PC
+    assert(!NeedsExplorerName(L"::{645ff040-5081-101b-9f08-00aa002f954e}"));                      // 휴지통 (소문자도)
+    assert(!NeedsExplorerName(L"C:\\Windows") && !NeedsExplorerName(L"\\\\server\\share") && !NeedsExplorerName(L""));
+    {
+        PIDLIST_ABSOLUTE cp = nullptr;
+        assert(SUCCEEDED(SHParseDisplayName(L"::{26EE0668-A00A-44D7-9371-BEB064C98683}", nullptr, &cp, 0, nullptr)));
+        assert(NeedsExplorer(cp));                 // 실제 제어판 PIDL
+        ILFree(cp);
+        assert(!NeedsExplorer(A) && !NeedsExplorer(B) && !NeedsExplorer(C));   // 내 PC, 문서, 바탕 화면
+        PIDLIST_ABSOLUTE sr = BuildSearch(A, L"notepad");
+        PWSTR sn = nullptr;
+        SHGetNameFromIDList(sr, SIGDN_DESKTOPABSOLUTEPARSING, &sn);
+        printf("search results parsing name: %ls\n", sn ? sn : L"(null)");
+        assert(!NeedsExplorer(sr));                // 우리 검색 결과는 이 앱에서
+        CoTaskMemFree(sn);
+        ILFree(sr);
+    }
 
     // 리본: 보기 모드 구간
     assert(ViewCmd(FVM_ICON, 256) == cmdViewXL && ViewCmd(FVM_ICON, 96) == cmdViewL);
@@ -4251,6 +4355,39 @@ int main() {
     return 0;
 }
 #else
+// 파일 탐색기 창 안에서 폴더를 열면 (더블클릭·Enter) 탐색기가 기본 동작 = 우리를 부른다. 그때 앞에
+// 있는 창은 그 탐색기 창이므로, 폴더를 그 창에서 열게 돌려주고 우리는 뜨지 않는다.
+// 바탕화면(Progman/WorkerW)·다른 앱에서 연 폴더는 그대로 우리 창에서 연다.
+static bool NavigateExplorerWindow(const std::wstring& path) {
+    HWND fg = GetForegroundWindow();
+    wchar_t cls[32] = {};
+    if (path.empty() || !fg || !GetClassNameW(fg, cls, 32) || lstrcmpW(cls, L"CabinetWClass")) return false;
+    IShellWindows* sw = nullptr;
+    if (FAILED(CoCreateInstance(CLSID_ShellWindows, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&sw)))) return false;
+    bool ok = false;
+    long n = 0;
+    sw->get_Count(&n);
+    for (long i = 0; i < n && !ok; ++i) {
+        VARIANT v; VariantInit(&v); V_VT(&v) = VT_I4; V_I4(&v) = i;
+        IDispatch* d = nullptr;
+        if (sw->Item(v, &d) != S_OK || !d) continue;
+        IWebBrowser2* wb = nullptr;
+        if (SUCCEEDED(d->QueryInterface(IID_PPV_ARGS(&wb)))) {
+            SHANDLE_PTR h = 0;
+            if (SUCCEEDED(wb->get_HWND(&h)) && (HWND)h == fg) {
+                VARIANT url, empty; VariantInit(&empty); VariantInit(&url);
+                V_VT(&url) = VT_BSTR; V_BSTR(&url) = SysAllocString(path.c_str());
+                ok = SUCCEEDED(wb->Navigate2(&url, &empty, &empty, &empty, &empty));
+                VariantClear(&url);
+            }
+            wb->Release();
+        }
+        d->Release();
+    }
+    sw->Release();
+    return ok;
+}
+
 int WINAPI wWinMain(HINSTANCE hi, HINSTANCE, LPWSTR, int show) {
     g_inst = hi;
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
@@ -4267,9 +4404,12 @@ int WINAPI wWinMain(HINSTANCE hi, HINSTANCE, LPWSTR, int show) {
         else if (argv[i][0] != L'/' && path.empty()) path = argv[i];
     }
     if (argv) LocalFree(argv);
+    // 드라이브는 "C:\" 로 넘어오는데 CommandLineToArgvW가 \" 를 따옴표로 읽어 C:" 가 된다
+    if (!path.empty() && path.back() == L'"') { path.pop_back(); if (path.size() == 2 && path[1] == L':') path += L'\\'; }
 
     // SPEC §10: 기본 파일 관리자가 뜨지 못하면 폴더를 원래 탐색기로라도 연다
     if (FAILED(OleInitialize(nullptr))) { OpenWithExplorer(path); return 1; }   // STA + 드래그&드롭
+    if (!forceNew && NavigateExplorerWindow(path)) { OleUninitialize(); return 0; }
 
     WNDCLASSEXW wc = { sizeof(wc) };
     wc.lpfnWndProc = PaneProc;

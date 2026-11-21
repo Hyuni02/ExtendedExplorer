@@ -111,6 +111,7 @@
 
     <!-- 파일 메뉴 -->
     <Command Name="cmdNewWindow" Id="2100" LabelTitle="새 창 열기"/>
+    <Command Name="cmdOpenInExplorer" Id="2104" LabelTitle="파일 탐색기에서 열기" TooltipDescription="지금 위치를 Windows 기본 파일 탐색기로 엽니다. 이 앱에서 잘 안 되는 폴더를 만났을 때 사용합니다."/>
     <Command Name="cmdOpenPS"    Id="2101" LabelTitle="Windows PowerShell 열기"/>
     <Command Name="cmdOpenCmd"   Id="2102" LabelTitle="명령 프롬프트 열기"/>
     <Command Name="cmdClose"     Id="2103" LabelTitle="닫기"/>
@@ -134,6 +135,7 @@
           <MenuGroup Class="MajorItems">
             <Button CommandName="cmdNewWindow"/>
             <Button CommandName="cmdNewTab"/>
+            <Button CommandName="cmdOpenInExplorer"/>
             <Button CommandName="cmdOpenPS"/>
             <Button CommandName="cmdOpenCmd"/>
           </MenuGroup>
