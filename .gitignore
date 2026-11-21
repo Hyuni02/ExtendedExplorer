@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Build output (build.bat: uicc/rc/cl products, logs, selftest)
+build/
+*.res
+*.pdb
+*.ilk
+
+# Visual Studio
+.vs/
+*.user
