@@ -602,6 +602,9 @@ static Node* NewPane(Tab* t, PCIDLIST_ABSOLUTE pidl) {
     RECT rc = {};
     if (FAILED(n->eb->Initialize(n->host, &rc, &fs))) { n->eb->Release(); n->eb = nullptr; return n; }
     n->eb->SetOptions(EBO_NOBORDER);
+    // 폴더별 보기(보기 모드·아이콘 크기·정렬) 기억. 이름이 없으면 이동할 때마다 위 FVM_DETAILS로 돌아간다.
+    // 셸이 HKCU ...\Shell\Bags 에 이 이름으로 폴더마다 저장한다 (탐색기 자체 설정과는 별개).
+    n->eb->SetPropertyBag(L"ExtendedExplorer");
     n->ev = new Events(n);
     n->eb->Advise(n->ev, &n->cookie);
     IUnknown_SetSite(n->eb, static_cast<IServiceProvider*>(n->ev));   // 뷰가 만들어지기 전에
